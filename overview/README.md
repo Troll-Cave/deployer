@@ -104,3 +104,8 @@ file system at that point in time. These will effectively be pass/warn/fail poli
 
 There can also be fall down policies at the org/category level which will run at before
 a pipeline is allowed to run. These will also act as pass/warn/fail policies.
+
+There will also be a special world ACL that represents all orgs. This is for enterprise
+wide permissions. This is intended for enterprise wide access. Likely this will be a
+key/value in the database to allow team's to modify it directly in case of cluster
+problems.
