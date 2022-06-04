@@ -1,0 +1,8 @@
+# Run the below command before running locally, or set up with IDE
+# source dev-database
+
+export PGUSER=postgres
+export PGHOST=localhost
+export PGPASSWORD=testpwd
+export PGDATABASE=deployer
+export PGPORT=5432
