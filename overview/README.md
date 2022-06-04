@@ -109,3 +109,12 @@ There will also be a special world ACL that represents all orgs. This is for ent
 wide permissions. This is intended for enterprise wide access. Likely this will be a
 key/value in the database to allow team's to modify it directly in case of cluster
 problems.
+
+## Database
+
+Running the database locally should be relatively easy. If you have  docker installed
+you can use the `stack.yml` to start it up. Simply run `docker compose -f stack.yml up`
+in the overview directory. Running the migrations should be from the same location
+(after you have added `flyway` to your `PATH`) `flyway migrate`. If you need to clear
+the database out you can use `flyway clean`. You will need to manually create the
+`deployer` database but that should be all the manual effort needed.
