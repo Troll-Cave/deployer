@@ -118,3 +118,19 @@ in the overview directory. Running the migrations should be from the same locati
 (after you have added `flyway` to your `PATH`) `flyway migrate`. If you need to clear
 the database out you can use `flyway clean`. You will need to manually create the
 `deployer` database but that should be all the manual effort needed.
+
+## Scope of POC
+
+### Stuff that will work
+
+* Creating orgs
+* Creating pipelines
+* Creating apps
+* Running Pipelines
+* Credentials (kubeconfig only to start)
+
+### Stuff that won't work
+
+* Auth/ACLs
+* taxonomy
+* org level pipelines
