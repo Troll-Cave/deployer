@@ -4,12 +4,12 @@ import * as jwt from 'jsonwebtoken';
 import axios from 'axios';
 import { GithubAccessToken, GithubInstallation } from '../input-models.interface';
 
-/**
- * Mostly this is here to make it easier deal with
- */
+// Mostly this is here to make it easier deal with
 const githubVersionHeader = {
   Accept: 'application/vnd.github.v3+json',
 };
+
+const githubRoot = process.env.GITHUB_API_ROOT || 'https://api.github.com';
 
 @Injectable()
 export class GithubService {
@@ -33,7 +33,7 @@ export class GithubService {
       ...githubVersionHeader,
     };
 
-    const ret = await axios.get<GithubInstallation[]>('https://api.github.com/app/installations', {
+    const ret = await axios.get<GithubInstallation[]>(`${githubRoot}/app/installations`, {
       headers: firstPartHeaders,
     });
 
@@ -43,7 +43,7 @@ export class GithubService {
       headers: firstPartHeaders,
     });
 
-    const retData = await axios.get(`https://api.github.com/repos/${org}/${repo}/zipball`, {
+    const retData = await axios.get(`${githubRoot}/repos/${org}/${repo}/zipball`, {
       responseType: 'arraybuffer',
       headers: {
         Authorization: `token ${retToken.data.token}`,
