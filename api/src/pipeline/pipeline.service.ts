@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PipelineInput, PipelineModel, PipelineVersionModel } from '../input-models.interface';
+import { Pipeline, PipelineInput, PipelineModel, PipelineVersionModel } from "../input-models.interface";
 import { DataService } from '../data/data.service';
 import { v4 as uuidv4 } from 'uuid';
 import { parse } from 'yaml';
@@ -36,7 +36,9 @@ export class PipelineService {
    * @param body the body lol
    */
   async createVersion(body: PipelineVersionModel): Promise<void> {
-    const code = parse(body.code);
+    // It's more than slightly annoying that we have to convert.
+    const code = parse(body.code) as Pipeline;
+
     console.log(JSON.stringify(code, null, '  '));
 
     const variables = code.variables || [];
