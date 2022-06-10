@@ -9,7 +9,9 @@ const githubVersionHeader = {
   Accept: 'application/vnd.github.v3+json',
 };
 
+// We'll want a config service later
 const githubRoot = process.env.GITHUB_API_ROOT || 'https://api.github.com';
+const pemLocation = process.env.PEM_LOCATION || './deployer-app.pem';
 
 @Injectable()
 export class GithubService {
@@ -20,7 +22,7 @@ export class GithubService {
         iat: Math.floor(Date.now() / 1000) - 60,
         exp: Math.floor(Date.now() / 1000) + 10 * 60,
       },
-      fs.readFileSync('./deployer-app.pem'), // TODO: make this location an ENV
+      fs.readFileSync(pemLocation), // TODO: make this location an ENV
       { algorithm: 'RS256' },
     );
   }

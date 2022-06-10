@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PipelineInput, PipelineModel, PipelineVersionModel } from '../input-models.interface';
 import { DataService } from '../data/data.service';
 import { v4 as uuidv4 } from 'uuid';
+import { parse } from 'yaml';
 
 @Injectable()
 export class PipelineService {
@@ -35,6 +36,11 @@ export class PipelineService {
    * @param body the body lol
    */
   async createVersion(body: PipelineVersionModel): Promise<void> {
+    const code = parse(body.code);
+    console.log(JSON.stringify(code, null, '  '));
+
+    const variables = code.variables || [];
+
     const pool = this.dataService.getPool();
 
     const checkRes = await pool.query('SELECT * FROM public.pipeline_version WHERE pipeline = $1 AND name = $2', [
@@ -45,14 +51,14 @@ export class PipelineService {
     if (checkRes.rows.length === 0) {
       await pool.query(
         'INSERT INTO public.pipeline_version (id, name, pipeline, variables, code) VALUES ($1, $2, $3, $4, $5)',
-        [uuidv4(), body.name, body.pipeline, null, body.code],
+        [uuidv4(), body.name, body.pipeline, { variables }, body.code],
       );
     } else {
       const id = checkRes.rows[0].id;
 
       await pool.query(
         'UPDATE public.pipeline_version SET name = $2, pipeline = $3, variables = $4, code = $5 WHERE id = $1',
-        [id, body.name, body.pipeline, null, body.code],
+        [id, body.name, body.pipeline, { variables }, body.code],
       );
     }
 

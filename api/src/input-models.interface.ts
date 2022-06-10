@@ -1,5 +1,3 @@
-import { exhaustiveTypeException } from "tsconfig-paths/lib/try-path";
-
 export interface PipelineInput {
   name: string;
 }
@@ -31,4 +29,41 @@ export interface GithubInstallationAccount {
 
 export interface GithubAccessToken {
   token: string;
+}
+
+/************* Pipeline stuff goes here *************/
+
+export interface Pipeline {
+  variables?: PipelineVariable[];
+  steps: PipelineStepCommand[];
+  flow: PipelineFlow[];
+}
+
+export interface PipelineVariable {
+  name: string;
+  type: 'string' | 'credential';
+  scope: 'org' | 'local';
+  secret: boolean;
+}
+
+// Don't use this directly, inherit it and add to union on pipeline interface
+export interface PipelineStep {
+  name: string;
+  persist: boolean;
+}
+
+export interface PipelineStepCommand extends PipelineStep {
+  type: 'commands';
+  locals: {
+    name: string;
+    type: 'string';
+  };
+}
+
+export interface PipelineFlow {
+  name?: string;
+  step: string;
+  // The type of this doesn't really matter but might as well
+  // make sure folks know to use a single value
+  locals: Record<string, string | number | boolean>;
 }

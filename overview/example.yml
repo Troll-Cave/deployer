@@ -17,7 +17,7 @@ steps:
           echo ${locals.bar}
           npm install
 
-pipeline:
+flow:
   - step: build
     depends_on: []
     locals:
