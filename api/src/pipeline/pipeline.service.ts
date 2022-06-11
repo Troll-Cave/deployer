@@ -1,8 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Pipeline, PipelineInput, PipelineModel, PipelineVersionModel } from "../input-models.interface";
+import {
+  Pipeline,
+  PipelineFlow,
+  PipelineInput,
+  PipelineModel,
+  PipelineVariable,
+  PipelineVersionModel,
+} from '../input-models.interface';
 import { DataService } from '../data/data.service';
 import { v4 as uuidv4 } from 'uuid';
 import { parse } from 'yaml';
+import { exec } from 'child_process';
 
 @Injectable()
 export class PipelineService {
@@ -65,5 +73,70 @@ export class PipelineService {
     }
 
     return;
+  }
+
+  /**
+   * @deprecated for early testing only
+   * @param id the version id
+   */
+  async runVersion(id: string, variables: Record<string, any> = {}): Promise<void> {
+    const pool = this.dataService.getPool();
+
+    const checkRes = await pool.query('SELECT * FROM public.pipeline_version WHERE id = $1', [id]);
+
+    const version = checkRes.rows[0];
+
+    const code = parse(version.code) as Pipeline;
+
+    await this.runFlow(code, [...code.flow]);
+  }
+
+  private async runFlow(code: Pipeline, pipelineFlows: PipelineFlow[], parent: string = null) {
+    const replacements: Record<string, string> = {};
+
+    for (const variable of code.variables) {
+      replacements[`variables.${variable.name}`] = 'john';
+    }
+
+    // Basically if parent isn't null look for it, if it is find empties.
+    const matches = pipelineFlows.filter(
+      (flow) => (parent !== null && flow.depends_on.indexOf(parent) !== -1) || flow.depends_on.length === 0,
+    );
+
+    const rest = pipelineFlows.filter((flow) => matches.indexOf(flow) === -1);
+
+    for (const match of matches) {
+      const localReplacements = { ...replacements };
+      const localKeys = Object.keys(match.locals);
+
+      for (const local of localKeys) {
+        localReplacements[`locals.${local}`] = this.processTemplate(replacements, match.locals[local]);
+      }
+
+      const step = code.steps.filter((s) => s.name === match.step)[0];
+
+      console.log(localReplacements);
+
+      for (const action of step.actions) {
+        const processedCommand = this.processTemplate(localReplacements, action.command);
+        exec(processedCommand, (err, stdout, stderr) => {
+          if (err !== null) {
+            console.log(err);
+          }
+
+          console.log(stdout);
+        });
+      }
+    }
+  }
+
+  private processTemplate(replacements: Record<string, string>, template: string): string {
+    const replacementKeys = Object.keys(replacements);
+
+    for (const key of replacementKeys) {
+      template = template.replace(`\$\{${key}\}`, replacements[key]);
+    }
+
+    return template;
   }
 }

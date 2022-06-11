@@ -21,4 +21,17 @@ export class PipelineController {
   async createVersion(@Body() body: PipelineVersionModel): Promise<void> {
     await this.pipelineService.createVersion(body);
   }
+
+  /**
+   * This method will be totally changed, it's just here now for testing
+   * @deprecated putting this in now.
+   */
+  @Post('run')
+  async runVersion(): Promise<void> {
+    const version = 'e5627c0f-a65f-4b23-9ae6-fe3cdf770be8';
+
+    await this.pipelineService.runVersion(version);
+
+    return;
+  }
 }

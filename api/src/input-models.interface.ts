@@ -58,12 +58,17 @@ export interface PipelineStepCommand extends PipelineStep {
     name: string;
     type: 'string';
   };
+  actions: {
+    name: string;
+    command: string;
+  }[];
 }
 
 export interface PipelineFlow {
   name?: string;
   step: string;
+  depends_on: string[];
   // The type of this doesn't really matter but might as well
   // make sure folks know to use a single value
-  locals: Record<string, string | number | boolean>;
+  locals: Record<string, string>;
 }
