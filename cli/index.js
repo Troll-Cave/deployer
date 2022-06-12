@@ -11,10 +11,21 @@ let yml = fs.readFileSync('./example.yml', {
   encoding: 'utf-8'
 });
 
+const files = {
+  "textfile": "./lol.txt"
+}
+
+for (const file of Object.keys(files)) {
+  const filePath = files[file];
+  const data = fs.readFileSync(filePath, 'base64');
+  files[file] = data;
+}
+
 let body = {
   "name": "1",
   "pipeline": "0a3f9729-53d7-4bab-8b6b-4408b1e73a3a",
-  "code": yml
+  "code": yml,
+  files
 };
 
 console.log(JSON.stringify(body, null, '  '));

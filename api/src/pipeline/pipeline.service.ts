@@ -11,6 +11,7 @@ import { DataService } from '../data/data.service';
 import { v4 as uuidv4 } from 'uuid';
 import { parse } from 'yaml';
 import { exec } from 'child_process';
+import * as fs from 'fs';
 
 @Injectable()
 export class PipelineService {
@@ -60,15 +61,15 @@ export class PipelineService {
 
     if (checkRes.rows.length === 0) {
       await pool.query(
-        'INSERT INTO public.pipeline_version (id, name, pipeline, variables, code) VALUES ($1, $2, $3, $4, $5)',
-        [uuidv4(), body.name, body.pipeline, { variables }, body.code],
+        'INSERT INTO public.pipeline_version (id, name, pipeline, variables, code, files) VALUES ($1, $2, $3, $4, $5, $6)',
+        [uuidv4(), body.name, body.pipeline, { variables }, body.code, body.files],
       );
     } else {
       const id = checkRes.rows[0].id;
 
       await pool.query(
-        'UPDATE public.pipeline_version SET name = $2, pipeline = $3, variables = $4, code = $5 WHERE id = $1',
-        [id, body.name, body.pipeline, { variables }, body.code],
+        'UPDATE public.pipeline_version SET name = $2, pipeline = $3, variables = $4, code = $5, files = $6 WHERE id = $1',
+        [id, body.name, body.pipeline, { variables }, body.code, body.files],
       );
     }
 
@@ -88,20 +89,28 @@ export class PipelineService {
 
     const code = parse(version.code) as Pipeline;
 
-    await this.runFlow(code, [...code.flow]);
+    await this.runFlow(code, [...code.flow], version.files);
   }
 
-  private async runFlow(code: Pipeline, pipelineFlows: PipelineFlow[], parent: string = null) {
+  private async runFlow(code: Pipeline, pipelineFlows: PipelineFlow[], files: Record<string, string>) {
     const replacements: Record<string, string> = {};
 
     for (const variable of code.variables) {
       replacements[`variables.${variable.name}`] = 'john';
     }
 
-    // Basically if parent isn't null look for it, if it is find empties.
-    const matches = pipelineFlows.filter(
-      (flow) => (parent !== null && flow.depends_on.indexOf(parent) !== -1) || flow.depends_on.length === 0,
-    );
+    for (const file of code.files) {
+      // these are static replaceable files
+      fs.writeFileSync(file.location, files[file.name], 'base64');
+
+      if (file.binary !== true) {
+        const fileData = fs.readFileSync(file.location, 'utf-8');
+
+        fs.writeFileSync(file.location, this.processTemplate(replacements, fileData), 'utf-8');
+      }
+    }
+
+    const matches = pipelineFlows.filter((flow) => flow.depends_on.length === 0);
 
     const rest = pipelineFlows.filter((flow) => matches.indexOf(flow) === -1);
 

@@ -15,6 +15,13 @@ steps:
       - name: npm install
         command: |
           echo ${locals.bar}
+          cat lol.txt
+
+files:
+  - name: textfile
+    can_replace: true # this will default to false
+    binary: false # this will be the default
+    location: './lol.txt'
 
 flow:
   - step: build

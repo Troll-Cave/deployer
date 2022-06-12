@@ -14,6 +14,7 @@ export interface PipelineVersionModel {
   pipeline: string; // UUID
   variables?: any[]; // JSON structure, pull from code
   code: string;
+  files: Record<string, string>;
 }
 
 export interface GithubInstallation {
@@ -37,6 +38,13 @@ export interface Pipeline {
   variables?: PipelineVariable[];
   steps: PipelineStepCommand[];
   flow: PipelineFlow[];
+
+  files: {
+    name: string;
+    can_replace?: boolean;
+    binary?: boolean;
+    location: string;
+  }[];
 }
 
 export interface PipelineVariable {
