@@ -6,7 +6,7 @@ import {
   PipelineModel,
   PipelineVariable,
   PipelineVersionModel,
-} from '../input-models.interface';
+} from '../../../shared/input-models.interface';
 import { DataService } from '../data/data.service';
 import { v4 as uuidv4 } from 'uuid';
 import { parse } from 'yaml';
