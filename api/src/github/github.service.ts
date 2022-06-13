@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as jwt from 'jsonwebtoken';
 import axios from 'axios';
-import { GithubAccessToken, GithubInstallation } from '../../../shared/input-models.interface';
+import { GithubAccessToken, GithubInstallation } from '../../input-models.interface';
 
 // Mostly this is here to make it easier deal with
 const githubVersionHeader = {

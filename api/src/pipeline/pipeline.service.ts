@@ -4,9 +4,8 @@ import {
   PipelineFlow,
   PipelineInput,
   PipelineModel,
-  PipelineVariable,
   PipelineVersionModel,
-} from '../../../shared/input-models.interface';
+} from '../../input-models.interface';
 import { DataService } from '../data/data.service';
 import { v4 as uuidv4 } from 'uuid';
 import { parse } from 'yaml';

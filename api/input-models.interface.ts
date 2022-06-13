@@ -80,3 +80,8 @@ export interface PipelineFlow {
   // make sure folks know to use a single value
   locals: Record<string, string>;
 }
+
+export interface OrgModel {
+  id?: string;
+  name: string;
+}

@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { PipelineInput, PipelineVersionModel } from '../../../shared/input-models.interface';
+import { PipelineInput, PipelineVersionModel } from '../../input-models.interface';
 
 import { PipelineService } from './pipeline.service';
 
