@@ -1,5 +1,6 @@
 # Run the below command before running locally, or set up with IDE
 # source dev-database
+# for jetbrains use "PGDATABASE=deployer;PGHOST=localhost;PGPASSWORD=testpwd;PGPORT=5432;PGUSER=postgres"
 
 export PGUSER=postgres
 export PGHOST=localhost
