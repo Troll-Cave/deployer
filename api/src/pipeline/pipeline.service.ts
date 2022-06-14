@@ -75,6 +75,10 @@ export class PipelineService {
     return;
   }
 
+  async startPipeline(id: string): Promise<void> {
+    //
+  };
+
   /**
    * @deprecated for early testing only
    * @param id the version id

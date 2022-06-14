@@ -1,5 +1,5 @@
 import { Body, Controller, Get, Post, Query } from '@nestjs/common';
-import { PipelineInput, PipelineVersionModel } from '../../input-models.interface';
+import { PipelineInput, PipelineVersionModel, StartPipelineInput } from '../../input-models.interface';
 
 import { PipelineService } from './pipeline.service';
 
@@ -34,5 +34,10 @@ export class PipelineController {
     await this.pipelineService.runVersion(version);
 
     return;
+  }
+
+  @Post('start')
+  async startPipeline(@Body() body: StartPipelineInput): Promise<void> {
+    await this.pipelineService.startPipeline(body.id);
   }
 }

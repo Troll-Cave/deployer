@@ -76,12 +76,22 @@ export interface PipelineFlow {
   name?: string;
   step: string;
   depends_on: string[];
-  // The type of this doesn't really matter but might as well
-  // make sure folks know to use a single value
   locals: Record<string, string>;
 }
 
 export interface OrgModel {
   id?: string;
   name: string;
+}
+
+export interface AppInput {
+  id?: string;
+  name: string;
+  org: string;
+  source: string;
+  variables: Record<string, string>;
+}
+
+export interface StartPipelineInput {
+  id: string; // id of the application
 }
