@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30114.105
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "api\api.csproj", "{868F42D1-8C0B-436B-80CD-6F8EE22CB950}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scheduler", "scheduler\scheduler.csproj", "{3AB2E261-F3FA-49B5-8AF7-B449AC3D15BC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{868F42D1-8C0B-436B-80CD-6F8EE22CB950}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{868F42D1-8C0B-436B-80CD-6F8EE22CB950}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{868F42D1-8C0B-436B-80CD-6F8EE22CB950}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{868F42D1-8C0B-436B-80CD-6F8EE22CB950}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AB2E261-F3FA-49B5-8AF7-B449AC3D15BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB2E261-F3FA-49B5-8AF7-B449AC3D15BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB2E261-F3FA-49B5-8AF7-B449AC3D15BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB2E261-F3FA-49B5-8AF7-B449AC3D15BC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

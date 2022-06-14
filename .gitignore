@@ -1,2 +1,5 @@
 .idea/
 .DS_Store
+deployer-app.pem
+obj/
+bin/
