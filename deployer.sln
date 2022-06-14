@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "api\api.csproj", "{8
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scheduler", "scheduler\scheduler.csproj", "{3AB2E261-F3FA-49B5-8AF7-B449AC3D15BC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "data", "data\data.csproj", "{DEBDF566-A479-42F9-8CFD-84AB48F4F5CD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{3AB2E261-F3FA-49B5-8AF7-B449AC3D15BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AB2E261-F3FA-49B5-8AF7-B449AC3D15BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AB2E261-F3FA-49B5-8AF7-B449AC3D15BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEBDF566-A479-42F9-8CFD-84AB48F4F5CD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEBDF566-A479-42F9-8CFD-84AB48F4F5CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEBDF566-A479-42F9-8CFD-84AB48F4F5CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEBDF566-A479-42F9-8CFD-84AB48F4F5CD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
