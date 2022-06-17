@@ -1,7 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace data.Models;
+namespace data.DataModels;
 
 [Table("config")]
 public class ConfigDTO

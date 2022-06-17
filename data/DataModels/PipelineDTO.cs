@@ -1,10 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace data.Models;
+namespace data.DataModels;
 
-[Table("pipeline_version")]
-public class PipelineVersionDTO
+[Table("pipeline")]
+public class PipelineDTO
 {
     [Column("id"), Key()]
     public Guid ID { get; set; }

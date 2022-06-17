@@ -1,6 +1,6 @@
 using api.Models;
 using data;
-using data.Models;
+using data.DataModels;
 
 namespace api.Logic;
 
