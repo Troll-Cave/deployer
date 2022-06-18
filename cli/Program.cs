@@ -43,7 +43,7 @@ var request = new HttpRequestMessage()
     Content = new StringContent(bytes, Encoding.UTF8, "application/json")
 };
 
-await client.SendAsync(request);
+//await client.SendAsync(request);
 
 Console.WriteLine(bytes);
 

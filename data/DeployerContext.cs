@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using data.DataModels;
+using data.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace data;
@@ -31,6 +32,18 @@ public class DeployerContext : DbContext
             .HasOne<PipelineVersionDTO>()
             .WithMany()
             .HasForeignKey(x => x.PipelineVersionId)
+            .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<OrganizationDTO>()
+            .HasMany<ApplicationDTO>()
+            .WithOne()
+            .HasForeignKey(x => x.Organization)
+            .OnDelete(DeleteBehavior.SetNull);
+        
+        modelBuilder.Entity<OrganizationDTO>()
+            .HasMany<PipelineDTO>()
+            .WithOne()
+            .HasForeignKey(x => x.Organization)
             .OnDelete(DeleteBehavior.SetNull);
     }
 }

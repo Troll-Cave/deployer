@@ -17,9 +17,9 @@ public class ApplicationDTO
     
     [Column("org")]
     public Guid? Organization { get; set; }
-    
+
     [Column("variables", TypeName = "jsonb")]
-    public Dictionary<string, string> Variables { get; set; }
+    public Dictionary<string, string> Variables { get; set; } = new();
     
     [Column("source")]
     public string Source { get; set; }

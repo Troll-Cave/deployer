@@ -11,4 +11,7 @@ public class PipelineDTO
     
     [Column("name")]
     public string Name { get; set; }
+    
+    [Column("org")]
+    public Guid? Organization { get; set; }
 }
