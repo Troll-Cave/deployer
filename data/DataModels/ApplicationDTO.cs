@@ -11,4 +11,16 @@ public class ApplicationDTO
     
     [Column("name")]
     public string Name { get; set; }
+    
+    [Column("pipeline")]
+    public Guid? PipelineVersionId { get; set; }
+    
+    [Column("org")]
+    public Guid? Organization { get; set; }
+    
+    [Column("variables", TypeName = "jsonb")]
+    public Dictionary<string, string> Variables { get; set; }
+    
+    [Column("source")]
+    public string Source { get; set; }
 }

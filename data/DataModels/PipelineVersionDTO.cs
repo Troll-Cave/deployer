@@ -14,8 +14,8 @@ public class PipelineVersionDTO
     public string Name { get; set; }
     
     [Column("pipeline")]
-    public Guid Pipeline { get; set; }
-
+    public Guid PipelineId { get; set; }
+    
     [Column("code", TypeName = "jsonb")]
     public Pipeline Code { get; set; }
     

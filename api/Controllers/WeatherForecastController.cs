@@ -1,6 +1,7 @@
 using data;
 using data.DataModels;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers;
 
@@ -23,8 +24,8 @@ public class WeatherForecastController : ControllerBase
     }
 
     [HttpGet(Name = "GetWeatherForecast")]
-    public IEnumerable<PipelineVersionDTO> Get()
+    public IEnumerable<PipelineDTO> Get()
     {
-        return _deployerContext.PipelineVersions;
+        return _deployerContext.Pipelines.Include("Versions");
     }
 }

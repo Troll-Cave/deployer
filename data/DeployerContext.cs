@@ -19,4 +19,18 @@ public class DeployerContext : DbContext
     /// <param name="optionsBuilder"></param>
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseNpgsql("Host=localhost:5432;Database=deployer;Username=postgres;Password=testpwd");
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<PipelineDTO>()
+            .HasMany<PipelineVersionDTO>()
+            .WithOne()
+            .HasForeignKey(x => x.PipelineId);
+        
+        modelBuilder.Entity<ApplicationDTO>()
+            .HasOne<PipelineVersionDTO>()
+            .WithMany()
+            .HasForeignKey(x => x.PipelineVersionId)
+            .OnDelete(DeleteBehavior.SetNull);
+    }
 }

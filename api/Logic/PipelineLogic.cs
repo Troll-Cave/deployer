@@ -12,15 +12,36 @@ public class PipelineLogic
     {
         _context = context;
     }
+
+    public async Task Start(string appId)
+    {
+        var app = await _context.Applications.FindAsync(Guid.Parse(appId));
+        if (app == null)
+        {
+            return;
+        }
+
+        var version = await _context.PipelineVersions.FindAsync(app .PipelineVersionId);
+
+        if (version == null)
+        {
+            return;
+        }
+        
+        Console.WriteLine(version.Name);
+    }
     
     public async Task UpsertVersion(PipelineVersion version)
     {
-        var currentVersion = _context.PipelineVersions.FirstOrDefault(x => x.ID == version.ID);
+        var currentVersion = _context.PipelineVersions.FirstOrDefault(x => 
+            x.PipelineId == version.Pipeline &&
+            x.Name == version.Name);
 
         if (currentVersion != null)
         {
             // update
-            currentVersion.Name = version.name;
+            currentVersion.Code = version.Code;
+            currentVersion.Files = version.Files;
             await _context.SaveChangesAsync();
         }
         else
@@ -29,10 +50,14 @@ public class PipelineLogic
             var newVersion = new PipelineVersionDTO()
             {
                 ID = Guid.NewGuid(),
-                Name = version.name
+                PipelineId = version.Pipeline,
+                Name = version.Name,
+                Code = version.Code,
+                Files = version.Files
             };
 
             await _context.AddAsync(newVersion);
+            await _context.SaveChangesAsync();
         }
     }
 }

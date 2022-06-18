@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "scheduler", "scheduler\sche
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "data", "data\data.csproj", "{DEBDF566-A479-42F9-8CFD-84AB48F4F5CD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cli", "cli\cli.csproj", "{6A2F019B-F7E2-46CD-8243-3AEBBA691A29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{DEBDF566-A479-42F9-8CFD-84AB48F4F5CD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DEBDF566-A479-42F9-8CFD-84AB48F4F5CD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DEBDF566-A479-42F9-8CFD-84AB48F4F5CD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A2F019B-F7E2-46CD-8243-3AEBBA691A29}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A2F019B-F7E2-46CD-8243-3AEBBA691A29}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A2F019B-F7E2-46CD-8243-3AEBBA691A29}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A2F019B-F7E2-46CD-8243-3AEBBA691A29}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
