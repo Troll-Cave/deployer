@@ -28,7 +28,7 @@ var data = JsonSerializer.Deserialize<Pipeline>(pipelineText);
 
 var version = new PipelineVersion()
 {
-    Pipeline = Guid.Parse("0a3f9729-53d7-4bab-8b6b-4408b1e73a3a"),
+    Pipeline = Guid.Parse("89b0041b-b8cb-4b4e-81b7-c505c72dffa6"),
     Name = "1",
     Code = data!
 };
@@ -43,7 +43,7 @@ var request = new HttpRequestMessage()
     Content = new StringContent(bytes, Encoding.UTF8, "application/json")
 };
 
-//await client.SendAsync(request);
+await client.SendAsync(request);
 
 Console.WriteLine(bytes);
 

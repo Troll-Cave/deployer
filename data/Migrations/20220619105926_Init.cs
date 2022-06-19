@@ -103,6 +103,34 @@ namespace data.Migrations
                         onDelete: ReferentialAction.SetNull);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "job",
+                columns: table => new
+                {
+                    id = table.Column<Guid>(type: "uuid", nullable: false),
+                    code = table.Column<Pipeline>(type: "jsonb", nullable: false),
+                    metadata = table.Column<Dictionary<string, string>>(type: "jsonb", nullable: false),
+                    step_state = table.Column<Dictionary<string, string>>(type: "jsonb", nullable: false),
+                    pipeline = table.Column<Guid>(type: "uuid", nullable: true),
+                    application = table.Column<Guid>(type: "uuid", nullable: false),
+                    job_state = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_job", x => x.id);
+                    table.ForeignKey(
+                        name: "FK_job_application_application",
+                        column: x => x.application,
+                        principalTable: "application",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_job_pipeline_version_pipeline",
+                        column: x => x.pipeline,
+                        principalTable: "pipeline_version",
+                        principalColumn: "id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_application_org",
                 table: "application",
@@ -111,6 +139,16 @@ namespace data.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_application_pipeline",
                 table: "application",
+                column: "pipeline");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_job_application",
+                table: "job",
+                column: "application");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_job_pipeline",
+                table: "job",
                 column: "pipeline");
 
             migrationBuilder.CreateIndex(
@@ -127,10 +165,13 @@ namespace data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "application");
+                name: "config");
 
             migrationBuilder.DropTable(
-                name: "config");
+                name: "job");
+
+            migrationBuilder.DropTable(
+                name: "application");
 
             migrationBuilder.DropTable(
                 name: "pipeline_version");

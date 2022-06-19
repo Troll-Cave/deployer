@@ -134,3 +134,15 @@ the database out you can use `flyway clean`. You will need to manually create th
 * Auth/ACLs
 * taxonomy
 * org level pipelines
+
+## Stuff
+
+To reset the database during the POC period
+
+```
+dotnet ef database drop -f
+dotnet ef migrations remove
+dotnet ef migrations add Init
+dotnet ef database update
+curl http://localhost:5251/Util/fill
+```

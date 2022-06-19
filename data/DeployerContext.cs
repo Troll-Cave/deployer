@@ -13,6 +13,7 @@ public class DeployerContext : DbContext
     public DbSet<OrganizationDTO> Organizations { get; set; }
     public DbSet<PipelineDTO> Pipelines { get; set; }
     public DbSet<PipelineVersionDTO> PipelineVersions { get; set; }
+    public DbSet<JobDTO> Jobs { get; set; }
 
     /// <summary>
     /// Move this to startup later
@@ -45,5 +46,15 @@ public class DeployerContext : DbContext
             .WithOne()
             .HasForeignKey(x => x.Organization)
             .OnDelete(DeleteBehavior.SetNull);
+
+        modelBuilder.Entity<JobDTO>()
+            .HasOne<PipelineVersionDTO>()
+            .WithMany()
+            .HasForeignKey(x => x.PipelineVersionId);
+        
+        modelBuilder.Entity<JobDTO>()
+            .HasOne<ApplicationDTO>()
+            .WithMany()
+            .HasForeignKey(x => x.ApplicationId);
     }
 }

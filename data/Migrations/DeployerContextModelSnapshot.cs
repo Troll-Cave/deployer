@@ -79,6 +79,50 @@ namespace data.Migrations
                     b.ToTable("config");
                 });
 
+            modelBuilder.Entity("data.DataModels.JobDTO", b =>
+                {
+                    b.Property<Guid>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid")
+                        .HasColumnName("id");
+
+                    b.Property<Guid>("ApplicationId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("application");
+
+                    b.Property<Pipeline>("Code")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("code");
+
+                    b.Property<string>("JobState")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("job_state");
+
+                    b.Property<Dictionary<string, string>>("MetaData")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("metadata");
+
+                    b.Property<Guid?>("PipelineVersionId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("pipeline");
+
+                    b.Property<Dictionary<string, string>>("StepState")
+                        .IsRequired()
+                        .HasColumnType("jsonb")
+                        .HasColumnName("step_state");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("ApplicationId");
+
+                    b.HasIndex("PipelineVersionId");
+
+                    b.ToTable("job");
+                });
+
             modelBuilder.Entity("data.DataModels.OrganizationDTO", b =>
                 {
                     b.Property<Guid>("ID")
@@ -163,6 +207,19 @@ namespace data.Migrations
                         .WithMany()
                         .HasForeignKey("PipelineVersionId")
                         .OnDelete(DeleteBehavior.SetNull);
+                });
+
+            modelBuilder.Entity("data.DataModels.JobDTO", b =>
+                {
+                    b.HasOne("data.DataModels.ApplicationDTO", null)
+                        .WithMany()
+                        .HasForeignKey("ApplicationId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("data.DataModels.PipelineVersionDTO", null)
+                        .WithMany()
+                        .HasForeignKey("PipelineVersionId");
                 });
 
             modelBuilder.Entity("data.DataModels.PipelineDTO", b =>
