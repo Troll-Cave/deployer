@@ -45,6 +45,8 @@ var request = new HttpRequestMessage()
 
 await client.SendAsync(request);
 
+await client.PostAsync("http://localhost:5251/Application/858b05e9-ec30-4edd-ba07-9536b11b8d1f/start/HEAD", null);
+
 Console.WriteLine(bytes);
 
 return 0;

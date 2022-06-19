@@ -37,4 +37,7 @@ public class JobDTO
     
     [Column("job_state")]
     public string JobState { get; set; }
+    
+    [Column("source_reference")]
+    public string SourceReference { get; set; }
 }

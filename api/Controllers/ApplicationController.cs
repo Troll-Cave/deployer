@@ -19,10 +19,10 @@ namespace api.Controllers
             _pipelineLogic = pipelineLogic;
         }
         
-        [HttpPost("{id}/start")]
-        public async Task<IActionResult> StartPipeline([FromRoute] string id)
+        [HttpPost("{id}/start/{reference}")]
+        public async Task<IActionResult> StartPipeline([FromRoute] string id, [FromRoute] string reference)
         {
-            await _pipelineLogic.Start(id);
+            await _pipelineLogic.Start(id, reference);
             return Ok();
         }
     }

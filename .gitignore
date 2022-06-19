@@ -1,5 +1,6 @@
 .idea/
 .DS_Store
-deployer-app.pem
+*.pem
 obj/
 bin/
+.cache/

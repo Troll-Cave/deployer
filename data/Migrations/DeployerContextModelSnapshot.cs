@@ -109,6 +109,11 @@ namespace data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("pipeline");
 
+                    b.Property<string>("SourceReference")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("source_reference");
+
                     b.Property<Dictionary<string, string>>("StepState")
                         .IsRequired()
                         .HasColumnType("jsonb")

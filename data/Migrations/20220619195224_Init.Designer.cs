@@ -14,7 +14,7 @@ using data.Models;
 namespace data.Migrations
 {
     [DbContext(typeof(DeployerContext))]
-    [Migration("20220619105926_Init")]
+    [Migration("20220619195224_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -110,6 +110,11 @@ namespace data.Migrations
                     b.Property<Guid?>("PipelineVersionId")
                         .HasColumnType("uuid")
                         .HasColumnName("pipeline");
+
+                    b.Property<string>("SourceReference")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("source_reference");
 
                     b.Property<Dictionary<string, string>>("StepState")
                         .IsRequired()

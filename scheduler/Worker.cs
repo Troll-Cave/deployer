@@ -1,5 +1,4 @@
 using data;
-using Microsoft.EntityFrameworkCore;
 using scheduler.Logic;
 
 namespace scheduler;
@@ -8,20 +7,36 @@ public class Worker : BackgroundService
 {
     private readonly ILogger<Worker> _logger;
     private readonly IServiceProvider _provider;
-    private readonly DeployerContext _deployerContext;
+    
+    public static string GetCacheDir(string fileName = "")
+    {
+        if (string.IsNullOrWhiteSpace(fileName))
+        {
+            return Path.Join(Directory.GetCurrentDirectory(), ".cache");    
+        }
+        else
+        {
+            return Path.Join(Directory.GetCurrentDirectory(), ".cache", fileName);
+        }
+    }
 
     public Worker(ILogger<Worker> logger, IServiceProvider provider)
     {
         _logger = logger;
         _provider = provider;
-        _deployerContext = new DeployerContext();
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            if (!Directory.Exists(Worker.GetCacheDir()))
+            {
+                Directory.CreateDirectory(Worker.GetCacheDir());
+            }
+            
+            // _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+            //Console.WriteLine(Directory.GetCurrentDirectory());
 
             // This is a gigantic pain
             await using (var scope = _provider.CreateAsyncScope())

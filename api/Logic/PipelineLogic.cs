@@ -13,22 +13,36 @@ public class PipelineLogic
         _context = context;
     }
 
-    public async Task Start(string appId)
+    public async Task Start(string appId, string reference)
     {
         var app = await _context.Applications.FindAsync(Guid.Parse(appId));
+
         if (app == null)
         {
-            return;
+            throw new Exception("app doesn't exist");
         }
 
-        var version = await _context.PipelineVersions.FindAsync(app .PipelineVersionId);
+        var version = await _context.PipelineVersions.FindAsync(app.PipelineVersionId);
 
         if (version == null)
         {
-            return;
+            throw new Exception("version doesn't exist");
         }
-        
-        Console.WriteLine(version.Name);
+
+        var job = new JobDTO()
+        {
+            ID = Guid.NewGuid(),
+            ApplicationId = app.ID,
+            Code = version.Code,
+            JobState = "pending",
+            MetaData = new Dictionary<string, string>(),
+            PipelineVersionId = version.ID,
+            StepState = new Dictionary<string, string>(),
+            SourceReference = reference
+        };
+
+        await _context.AddAsync(job);
+        await _context.SaveChangesAsync();
     }
     
     public async Task UpsertVersion(PipelineVersion version)
