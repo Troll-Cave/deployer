@@ -57,11 +57,10 @@ public class QueryLogic
         var package = await _github.GetReference(app.Source, job.SourceReference);
         
         await File.WriteAllBytesAsync(artifactLocation, package);
-        throw new Exception("break here for deb");
 
         // We are ready at this point
-        //job.JobState = "ready";
-        //await _deployerContext.SaveChangesAsync();
+        job.JobState = "ready";
+        await _deployerContext.SaveChangesAsync();
     }
 
     private async Task ProcessJob(JobDTO job)

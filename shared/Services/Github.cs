@@ -1,12 +1,16 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text.Json;
 using Microsoft.IdentityModel.Tokens;
+using shared.Models;
 
 namespace shared.Services;
 
 public class Github
 {
+    private const string GithubRoot = "https://api.github.com";
     public Github()
     {
         
@@ -15,11 +19,88 @@ public class Github
     public async Task<byte[]> GetReference(string source, string reference)
     {
         var token = await GetToken();
-        Console.WriteLine(token);
+
+        var org = "Troll-Cave";
+        var repo = "";
+
+        var parts = source.Split("/");
+        var partsCount = parts.Length;
+        org = parts[partsCount - 2];
+        repo = parts[partsCount - 1];
+
+        var tokenUrl = await GetTokenUrl(token, org);
+
+        var tokenResponse = await GetTokenResponse(tokenUrl, token);
+
+        using var client = new HttpClient();
+        using var request = new HttpRequestMessage()
+        {
+            RequestUri = new Uri($"{GithubRoot}/repos/{org}/{repo}/zipball"),
+            Headers =
+            {
+                Authorization = new AuthenticationHeaderValue("token", tokenResponse.Token),
+                UserAgent = {new ProductInfoHeaderValue("Deployer", "1.0")}
+            }
+        };
+
+        using var response = await client.SendAsync(request);
         
-        return null;
+        return await response.Content.ReadAsByteArrayAsync();
     }
-    
+
+    private static async Task<GithubToken?> GetTokenResponse(string? tokenUrl, string token)
+    {
+        using var client = new HttpClient();
+        using var request = new HttpRequestMessage()
+        {
+            RequestUri = new Uri(tokenUrl),
+            Method = HttpMethod.Post,
+            Headers =
+            {
+                Accept = {new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json")},
+                Authorization = new AuthenticationHeaderValue("bearer", token),
+                UserAgent = {new ProductInfoHeaderValue("Deployer", "1.0")}
+            }
+        };
+
+        using var response = await client.SendAsync(request);
+
+        var stringContent = await response.Content.ReadAsStringAsync();
+        var tokenResponse = JsonSerializer.Deserialize<GithubToken>(stringContent);
+        return tokenResponse;
+    }
+
+    private static async Task<string?> GetTokenUrl(string token, string org)
+    {
+        using var client = new HttpClient();
+        using var request = new HttpRequestMessage()
+        {
+            RequestUri = new Uri($"{GithubRoot}/app/installations"),
+            Headers =
+            {
+                Accept = {new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json")},
+                Authorization = new AuthenticationHeaderValue("bearer", token),
+                UserAgent = {new ProductInfoHeaderValue("Deployer", "1.0")}
+            }
+        };
+
+        using var response = await client.SendAsync(request);
+
+        var stringContent = await response.Content.ReadAsStringAsync();
+        var installations = JsonSerializer.Deserialize<List<GithubInstallation>>(stringContent);
+
+        var tokenUrl = installations!.FirstOrDefault(x =>
+            x.TargetType == "Organization" &&
+            x.Account.Login == org)?.AccessTokenUrl;
+
+        if (tokenUrl == null)
+        {
+            throw new Exception("no token url");
+        }
+
+        return tokenUrl;
+    }
+
     /// <summary>
     /// ref https://vmsdurano.com/-net-core-3-1-signing-jwt-with-rsa/
     /// </summary>
