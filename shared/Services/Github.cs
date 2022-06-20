@@ -11,10 +11,6 @@ namespace shared.Services;
 public class Github
 {
     private const string GithubRoot = "https://api.github.com";
-    public Github()
-    {
-        
-    }
     
     public async Task<byte[]> GetReference(string source, string reference)
     {

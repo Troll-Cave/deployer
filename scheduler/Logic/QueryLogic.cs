@@ -57,8 +57,13 @@ public class QueryLogic
         var package = await _github.GetReference(app.Source, job.SourceReference);
         
         await File.WriteAllBytesAsync(artifactLocation, package);
+        
+        job.Code.Flow.ForEach(x =>
+        {
+            // set parentless steps to ready
+            job.StepState[x.Step] = x.DependsOn.Any() ? "pending" : "ready";
+        });
 
-        // We are ready at this point
         job.JobState = "ready";
         await _deployerContext.SaveChangesAsync();
     }
