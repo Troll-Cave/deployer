@@ -52,7 +52,6 @@ public class QueryLogic
 
         var source = app.Source;
         var artifactLocation = Worker.GetCacheDir($"{job.ID}.zip");
-        // TODO: Get the source
 
         var package = await _github.GetReference(app.Source, job.SourceReference);
         
@@ -106,9 +105,15 @@ public class QueryLogic
             }
         }
     }
-
+    
+    /// <summary>
+    /// Actually do work lol (this is where in the future this will use nomad)
+    /// </summary>
+    /// <param name="job"></param>
+    /// <param name="stepKey"></param>
     private async Task ProcessStep(JobDTO job, string stepKey)
     {
-        throw new NotImplementedException();
+        job.StepState[stepKey] = "done";
+        await _deployerContext.SaveChangesAsync();
     }
 }
