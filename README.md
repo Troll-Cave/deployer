@@ -1,6 +1,6 @@
 # Deployer
 
-Deployer is (will be) a full CI/CD platform built for governance (starting with CI).
+Deployer is (will be) a full CI/CD platform built for governance.
 
 ## Philosophy
 
@@ -114,10 +114,9 @@ problems.
 
 Running the database locally should be relatively easy. If you have  docker installed
 you can use the `stack.yml` to start it up. Simply run `docker compose -f stack.yml up`
-in the overview directory. Running the migrations should be from the same location
-(after you have added `flyway` to your `PATH`) `flyway migrate`. If you need to clear
-the database out you can use `flyway clean`. You will need to manually create the
-`deployer` database but that should be all the manual effort needed.
+in the overview directory. Migrations are done with `dotnet ef database update`. The
+flyway stuff will stick around as that's how you would actually manage the database in
+a non-dev environment.
 
 ## Scope of POC
 
@@ -126,8 +125,9 @@ the database out you can use `flyway clean`. You will need to manually create th
 * Creating orgs
 * Creating pipelines
 * Creating apps
-* Running Pipelines
+* Running Pipelines (only in direct mode)
 * Credentials (kubeconfig only to start)
+* Change review steps
 
 ### Stuff that won't work
 
