@@ -1,3 +1,4 @@
+using System.IO.Compression;
 using data;
 using data.DataModels;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +66,10 @@ public class QueryLogic
 
         job.JobState = "ready";
         await _deployerContext.SaveChangesAsync();
+        
+        // ZipFile.ExtractToDirectory(Worker.GetCacheDir($"{job.ID}.zip"), Worker.GetCacheDir("a"));
+        // ZipFile.CreateFromDirectory(Worker.GetCacheDir("a"), Worker.GetCacheDir($"b.zip"));
+        // ZipFile.ExtractToDirectory(Worker.GetCacheDir("b.zip"), Worker.GetCacheDir("c"));
     }
 
     private async Task ProcessJob(JobDTO job)
