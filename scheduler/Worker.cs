@@ -28,13 +28,15 @@ public class Worker : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
+        if (Directory.Exists(Worker.GetCacheDir()))
+        {
+            Directory.Delete(Worker.GetCacheDir(), true);
+        }
+            
+        Directory.CreateDirectory(Worker.GetCacheDir());
+        
         while (!stoppingToken.IsCancellationRequested)
         {
-            if (!Directory.Exists(Worker.GetCacheDir()))
-            {
-                Directory.CreateDirectory(Worker.GetCacheDir());
-            }
-            
             // _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             //Console.WriteLine(Directory.GetCurrentDirectory());
 

@@ -42,6 +42,9 @@ public class QueryLogic
 
     private async Task ProcessPending(JobDTO job)
     {
+        var tempArtifactLocation = Worker.GetCacheDir($"temp{Guid.NewGuid()}.zip");
+        var tempExtractLocation = Worker.GetCacheDir($"temp{Guid.NewGuid()}");
+
         Console.WriteLine($"Pulling job {job.ID}");
 
         var app = await _deployerContext.Applications.FindAsync(job.ApplicationId);
@@ -56,8 +59,22 @@ public class QueryLogic
 
         var package = await _github.GetReference(app.Source, job.SourceReference);
         
-        await File.WriteAllBytesAsync(artifactLocation, package);
+        // Write to temp location
+        await File.WriteAllBytesAsync(tempArtifactLocation, package);
         
+        // Extract to temp location
+        ZipFile.ExtractToDirectory(tempArtifactLocation, tempExtractLocation);
+        
+        // Get actually artifact folder
+        var artifactFolder = Directory.GetDirectories(tempExtractLocation)[0];
+        
+        // Compress to job artifact
+        ZipFile.CreateFromDirectory(artifactFolder, artifactLocation);
+        
+        // cleanup on aisle 5
+        Directory.Delete(tempExtractLocation, true);
+        File.Delete(tempArtifactLocation);
+
         job.Code.Flow.ForEach(x =>
         {
             // set parentless steps to ready
@@ -66,10 +83,6 @@ public class QueryLogic
 
         job.JobState = "ready";
         await _deployerContext.SaveChangesAsync();
-        
-        // ZipFile.ExtractToDirectory(Worker.GetCacheDir($"{job.ID}.zip"), Worker.GetCacheDir("a"));
-        // ZipFile.CreateFromDirectory(Worker.GetCacheDir("a"), Worker.GetCacheDir($"b.zip"));
-        // ZipFile.ExtractToDirectory(Worker.GetCacheDir("b.zip"), Worker.GetCacheDir("c"));
     }
 
     private async Task ProcessJob(JobDTO job)
@@ -118,6 +131,17 @@ public class QueryLogic
     /// <param name="stepKey"></param>
     private async Task ProcessStep(JobDTO job, string stepKey)
     {
+        var workDirectory = Worker.GetCacheDir($"temp{Guid.NewGuid()}");
+        var artifactLocation = Worker.GetCacheDir($"{job.ID}.zip");
+        ZipFile.ExtractToDirectory(artifactLocation, workDirectory);
+        
+        // Do work
+        
+        // Wrap it up
+        File.Delete(artifactLocation);
+        ZipFile.CreateFromDirectory(workDirectory, artifactLocation);
+        Directory.Delete(workDirectory, true);
+        
         job.StepState[stepKey] = "done";
         await _deployerContext.SaveChangesAsync();
     }
