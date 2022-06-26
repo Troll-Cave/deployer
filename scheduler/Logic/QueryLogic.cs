@@ -89,7 +89,7 @@ public class QueryLogic
         // Extract to temp location
         ZipFile.ExtractToDirectory(tempArtifactLocation, tempExtractLocation);
         
-        // Get actually artifact folder
+        // Get actual artifact folder
         var artifactFolder = Directory.GetDirectories(tempExtractLocation)[0];
         
         // do file adds
