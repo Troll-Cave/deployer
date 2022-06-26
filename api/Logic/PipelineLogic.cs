@@ -61,7 +61,6 @@ public class PipelineLogic
 
         var code = deserializer.Deserialize<Pipeline>(version.YAML);
         
-        Console.WriteLine(code.Steps.Count);
         var currentVersion = _context.PipelineVersions.FirstOrDefault(x => 
             x.PipelineId == version.Pipeline &&
             x.Name == version.Name);
