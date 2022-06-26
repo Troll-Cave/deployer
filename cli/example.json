@@ -1,6 +1,6 @@
 {
   "variables": [{
-    "name": "bob"
+    "name": "user"
   }],
   "steps": [{
     "name": "run",
@@ -15,7 +15,7 @@
   "flow": [{
     "step": "run",
     "locals": {
-      "bar": "${variables.bob}"
+      "bar": "${variables.user}"
     }
   }]
 }

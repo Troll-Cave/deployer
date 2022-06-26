@@ -25,7 +25,7 @@ public class JobDTO
     public Guid ApplicationId { get; set; }
     
     [Column("job_state", TypeName = "jsonb")]
-    public JobState JobState { get; set; }
+    public JobState State { get; set; }
     
     [Column("source_reference")]
     public string SourceReference { get; set; }

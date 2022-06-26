@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore.Migrations;
+using data.DataModels;
 using data.Models;
 
 #nullable disable
@@ -62,7 +62,7 @@ namespace data.Migrations
                     name = table.Column<string>(type: "text", nullable: false),
                     pipeline = table.Column<Guid>(type: "uuid", nullable: false),
                     code = table.Column<Pipeline>(type: "jsonb", nullable: false),
-                    files = table.Column<Dictionary<string, string>>(type: "jsonb", nullable: false)
+                    files = table.Column<PipelineVersionFiles>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -83,7 +83,7 @@ namespace data.Migrations
                     name = table.Column<string>(type: "text", nullable: false),
                     pipeline = table.Column<Guid>(type: "uuid", nullable: true),
                     org = table.Column<Guid>(type: "uuid", nullable: true),
-                    variables = table.Column<Dictionary<string, string>>(type: "jsonb", nullable: false),
+                    variables = table.Column<ApplicationVariables>(type: "jsonb", nullable: false),
                     source = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>

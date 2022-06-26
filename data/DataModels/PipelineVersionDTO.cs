@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 using data.Models;
 
 namespace data.DataModels;
@@ -20,5 +21,11 @@ public class PipelineVersionDTO
     public Pipeline Code { get; set; }
     
     [Column("files", TypeName = "jsonb")]
+    public PipelineVersionFiles Files { get; set; }
+}
+
+public class PipelineVersionFiles
+{
+    [JsonPropertyName("files")]
     public Dictionary<string, string> Files { get; set; }
 }

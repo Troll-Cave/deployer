@@ -37,7 +37,7 @@ public class PipelineLogic
             ID = Guid.NewGuid(),
             ApplicationId = app.ID,
             Code = version.Code,
-            JobState = new JobState()
+            State = new JobState()
             {
                 State = "pending",
                 StepState = new (),
@@ -62,7 +62,10 @@ public class PipelineLogic
         {
             // update
             currentVersion.Code = version.Code;
-            currentVersion.Files = version.Files;
+            currentVersion.Files = new PipelineVersionFiles()
+            {
+                Files = version.Files
+            };
             await _context.SaveChangesAsync();
         }
         else
@@ -74,7 +77,10 @@ public class PipelineLogic
                 PipelineId = version.Pipeline,
                 Name = version.Name,
                 Code = version.Code,
-                Files = version.Files
+                Files = new PipelineVersionFiles()
+                {
+                    Files = version.Files
+                }
             };
 
             await _context.AddAsync(newVersion);

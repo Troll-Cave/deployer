@@ -19,8 +19,25 @@ public class ApplicationDTO
     public Guid? Organization { get; set; }
 
     [Column("variables", TypeName = "jsonb")]
-    public Dictionary<string, string> Variables { get; set; } = new();
+    public ApplicationVariables Variables { get; set; }
     
     [Column("source")]
     public string Source { get; set; }
+}
+
+public class ApplicationVariables
+{
+    public Dictionary<string, string> Variables { get; set; }
+
+    public string? Get(string key)
+    {
+        if (this.Variables.ContainsKey(key))
+        {
+            return this.Variables[key];
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

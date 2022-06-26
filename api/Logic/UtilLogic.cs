@@ -50,7 +50,10 @@ public class UtilLogic
                 Name = "1",
                 PipelineId = pipelineId,
                 Code = new Pipeline(),
-                Files = new Dictionary<string, string>()
+                Files = new PipelineVersionFiles()
+                {
+                    Files = new Dictionary<string, string>()
+                }
             });
         }
 
@@ -62,7 +65,13 @@ public class UtilLogic
                 Name = "lol",
                 PipelineVersionId = versionId,
                 Organization = orgId,
-                Variables = new Dictionary<string, string>(),
+                Variables = new ApplicationVariables()
+                {
+                    Variables = new Dictionary<string, string>()
+                    {
+                        { "user", "bob" }
+                    }
+                },
                 Source = "https://github.com/Troll-Cave/story"
             });
         }
