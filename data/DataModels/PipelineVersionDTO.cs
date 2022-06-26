@@ -20,6 +20,9 @@ public class PipelineVersionDTO
     [Column("code", TypeName = "jsonb")]
     public Pipeline Code { get; set; }
     
+    [Column("yaml")]
+    public string YAML { get; set; }
+    
     [Column("files", TypeName = "jsonb")]
     public PipelineVersionFiles Files { get; set; }
 }

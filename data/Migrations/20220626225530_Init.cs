@@ -62,6 +62,7 @@ namespace data.Migrations
                     name = table.Column<string>(type: "text", nullable: false),
                     pipeline = table.Column<Guid>(type: "uuid", nullable: false),
                     code = table.Column<Pipeline>(type: "jsonb", nullable: false),
+                    yaml = table.Column<string>(type: "text", nullable: false),
                     files = table.Column<PipelineVersionFiles>(type: "jsonb", nullable: false)
                 },
                 constraints: table =>

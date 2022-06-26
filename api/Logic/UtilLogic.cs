@@ -49,6 +49,7 @@ public class UtilLogic
                 ID = versionId,
                 Name = "1",
                 PipelineId = pipelineId,
+                YAML = "",
                 Code = new Pipeline(),
                 Files = new PipelineVersionFiles()
                 {

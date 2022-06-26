@@ -184,6 +184,11 @@ namespace data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("pipeline");
 
+                    b.Property<string>("YAML")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("yaml");
+
                     b.HasKey("ID");
 
                     b.HasIndex("PipelineId");

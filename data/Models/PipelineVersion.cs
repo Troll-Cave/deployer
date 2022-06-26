@@ -11,8 +11,8 @@ public class PipelineVersion
     [JsonPropertyName("pipeline")]
     public Guid Pipeline { get; set; }
     
-    [JsonPropertyName("code")]
-    public Pipeline Code { get; set; }
+    [JsonPropertyName("yaml")]
+    public string YAML { get; set; }
     
     [JsonPropertyName("files")]
     public Dictionary<string, string> Files { get; set; } = new();

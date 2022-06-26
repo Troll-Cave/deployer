@@ -14,7 +14,7 @@ using data.Models;
 namespace data.Migrations
 {
     [DbContext(typeof(DeployerContext))]
-    [Migration("20220626142547_Init")]
+    [Migration("20220626225530_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -185,6 +185,11 @@ namespace data.Migrations
                     b.Property<Guid>("PipelineId")
                         .HasColumnType("uuid")
                         .HasColumnName("pipeline");
+
+                    b.Property<string>("YAML")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("yaml");
 
                     b.HasKey("ID");
 

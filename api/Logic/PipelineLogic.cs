@@ -4,6 +4,8 @@ using api.Models;
 using data;
 using data.DataModels;
 using data.Models;
+using YamlDotNet.Serialization;
+using YamlDotNet.Serialization.NamingConventions;
 
 namespace api.Logic;
 
@@ -53,7 +55,13 @@ public class PipelineLogic
     
     public async Task UpsertVersion(PipelineVersion version)
     {
-        Console.WriteLine(version.Code.Steps.Count);
+        var deserializer = new DeserializerBuilder()
+            .WithNamingConvention(UnderscoredNamingConvention.Instance)  // see height_in_inches in sample yml 
+            .Build();
+
+        var code = deserializer.Deserialize<Pipeline>(version.YAML);
+        
+        Console.WriteLine(code.Steps.Count);
         var currentVersion = _context.PipelineVersions.FirstOrDefault(x => 
             x.PipelineId == version.Pipeline &&
             x.Name == version.Name);
@@ -61,7 +69,8 @@ public class PipelineLogic
         if (currentVersion != null)
         {
             // update
-            currentVersion.Code = version.Code;
+            currentVersion.Code = code;
+            currentVersion.YAML = version.YAML;
             currentVersion.Files = new PipelineVersionFiles()
             {
                 Files = version.Files
@@ -76,7 +85,8 @@ public class PipelineLogic
                 ID = Guid.NewGuid(),
                 PipelineId = version.Pipeline,
                 Name = version.Name,
-                Code = version.Code,
+                YAML = version.YAML,
+                Code = code,
                 Files = new PipelineVersionFiles()
                 {
                     Files = version.Files

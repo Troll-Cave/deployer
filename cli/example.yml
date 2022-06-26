@@ -1,0 +1,35 @@
+variables:
+  - name: user
+
+files:
+  - name: dockerfile
+    location: Dockerfile
+
+steps:
+  - name: run
+    locals:
+      - name: bar
+    type: command
+    actions:
+      - command: |-
+          echo ${locals.bar}
+          cat Dockerfile
+  - name: run2
+    locals:
+      - name: bar
+    type: command
+    actions:
+      - command: |-
+          echo ${locals.bar}
+          cat Dockerfile
+          
+flow:
+  - step: run
+    locals:
+      bar: "${variables.user}"
+      
+  - step: run2
+    locals:
+      bar: steve
+    depends_on:
+      - run
