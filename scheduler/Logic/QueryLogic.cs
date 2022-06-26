@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.IO.Compression;
+using System.Text;
 using System.Text.Json.Nodes;
 using data;
 using data.DataModels;
@@ -59,6 +60,24 @@ public class QueryLogic
             throw new Exception("how is this possible?");
         }
 
+        var version = await _deployerContext.PipelineVersions.FirstAsync(x => x.ID == job.PipelineVersionId);
+        
+        var replacements = new Dictionary<string, string>();
+        
+        foreach (var variable in job.Code.Variables)
+        {
+            var v = app.Variables.Get(variable.Name);
+            if (v == null)
+            {
+                Console.WriteLine($"variable {variable.Name} doesn't exist in app");
+                job.State.State = "error";
+                await _deployerContext.SaveChangesAsync();
+                return;
+            }
+            
+            replacements.Add($"variables.{variable.Name}", v);
+        }
+
         var source = app.Source;
         var artifactLocation = Worker.GetCacheDir($"{job.ID}.zip");
 
@@ -72,6 +91,27 @@ public class QueryLogic
         
         // Get actually artifact folder
         var artifactFolder = Directory.GetDirectories(tempExtractLocation)[0];
+        
+        // do file adds
+        foreach (var file in job.Code.Files)
+        {
+            var fileBytes = Convert.FromBase64String(version.Files.Files[file.Name]);
+
+            if (file.IsBinary)
+            {
+                // we don't do replacements on binary files
+                await File.WriteAllBytesAsync(
+                    Path.Join(artifactFolder, file.Location),
+                    fileBytes);
+                
+                continue;
+            }
+
+            var fileContent = Encoding.UTF8.GetString(fileBytes);
+            await File.WriteAllTextAsync(
+                Path.Join(artifactFolder, file.Location), 
+                ProcessTemplate(fileContent, replacements));
+        }
         
         // Compress to job artifact
         ZipFile.CreateFromDirectory(artifactFolder, artifactLocation);

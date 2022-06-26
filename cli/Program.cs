@@ -31,7 +31,11 @@ var version = new PipelineVersion()
 {
     Pipeline = Guid.Parse("89b0041b-b8cb-4b4e-81b7-c505c72dffa6"),
     Name = "1",
-    Code = data!
+    Code = data!,
+    Files = new Dictionary<string, string>()
+    {
+        { "dockerfile", Convert.ToBase64String(File.ReadAllBytes("./dockerfile")) }
+    }
 };
 
 var bytes = JsonSerializer.Serialize(version);

@@ -9,7 +9,7 @@
     }],
     "type": "command",
     "actions": [{
-      "command": "echo ${locals.bar}"
+      "command": "echo ${locals.bar}\ncat Dockerfile"
     }]
   }],
   "flow": [{
@@ -17,5 +17,9 @@
     "locals": {
       "bar": "${variables.user}"
     }
+  }],
+  "files": [{
+    "name": "dockerfile",
+    "location": "Dockerfile"
   }]
 }

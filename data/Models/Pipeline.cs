@@ -42,7 +42,7 @@ public class PipelineFile
     public bool CanReplace { get; set; } = true;
     
     [JsonPropertyName("isBinary")]
-    public bool IsBinary { get; set; }
+    public bool IsBinary { get; set; } = false;
     
     [JsonPropertyName("location")]
     public string Location { get; set; }
