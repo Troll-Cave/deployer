@@ -109,11 +109,9 @@ namespace data.Migrations
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     code = table.Column<Pipeline>(type: "jsonb", nullable: false),
-                    metadata = table.Column<Dictionary<string, string>>(type: "jsonb", nullable: false),
-                    step_state = table.Column<Dictionary<string, string>>(type: "jsonb", nullable: false),
                     pipeline = table.Column<Guid>(type: "uuid", nullable: true),
                     application = table.Column<Guid>(type: "uuid", nullable: false),
-                    job_state = table.Column<string>(type: "text", nullable: false),
+                    job_state = table.Column<JobState>(type: "jsonb", nullable: false),
                     source_reference = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>

@@ -1,4 +1,5 @@
 using System.IO.Compression;
+using System.Text.Json.Nodes;
 using data;
 using data.DataModels;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +23,7 @@ public class QueryLogic
     public async Task RunQueries(CancellationToken stoppingToken)
     {
         var jobs = await _deployerContext.Jobs
-            .Where(x => x.JobState == "ready")
+            .Where(x => x.JobState.State == "ready")
             .ToListAsync(stoppingToken);
 
         foreach (var job in jobs)
@@ -31,7 +32,7 @@ public class QueryLogic
         }
         
         var pendingJobs = await _deployerContext.Jobs
-            .Where(x => x.JobState == "pending")
+            .Where(x => x.JobState.State == "pending")
             .ToListAsync(stoppingToken);
         
         foreach (var job in pendingJobs)
@@ -42,6 +43,9 @@ public class QueryLogic
 
     private async Task ProcessPending(JobDTO job)
     {
+        // IMPORTANT: When you modify the state, you need to manually set the dirty flag
+        _deployerContext.Entry(job).State = EntityState.Modified;
+        
         var tempArtifactLocation = Worker.GetCacheDir($"temp{Guid.NewGuid()}.zip");
         var tempExtractLocation = Worker.GetCacheDir($"temp{Guid.NewGuid()}");
 
@@ -77,38 +81,42 @@ public class QueryLogic
 
         job.Code.Flow.ForEach(x =>
         {
+            Console.WriteLine("flow here");
             // set parentless steps to ready
-            job.StepState[x.Step] = x.DependsOn.Any() ? "pending" : "ready";
+            job.JobState.StepState[x.Step] = x.DependsOn.Any() ? "pending" : "ready";
         });
 
-        job.JobState = "ready";
+        job.JobState.State = "ready";
         await _deployerContext.SaveChangesAsync();
     }
 
     private async Task ProcessJob(JobDTO job)
     {
+        // so that it'll save
+        _deployerContext.Entry(job).State = EntityState.Modified;
+        
         Console.WriteLine($"Processing job {job.ID}");
-        var readySteps = job.StepState.Where(x => x.Value == "ready").ToList();
-
+        var readySteps = job.JobState.StepState.Where(x => x.Value == "ready").ToList();
+        
         if (!readySteps.Any())
         {
-            if (job.StepState.Any(x => x.Value != "done"))
+            if (job.JobState.StepState.Any(x => x.Value != "done"))
             {
                 // basically in this case there's an error or something weird
-                job.JobState = "waiting";
+                job.JobState.State = "waiting";
             }
             else
             {
                 // yay!
-                job.JobState = "done";
+                job.JobState.State = "done";
             }
             await _deployerContext.SaveChangesAsync();
             return;
         }
-
-        job.JobState = "working";
+        
+        job.JobState.State = "working";
         await _deployerContext.SaveChangesAsync();
-
+        
         foreach (var step in readySteps)
         {
             try
@@ -117,11 +125,17 @@ public class QueryLogic
             }
             catch (Exception e)
             {
-                job.JobState = "error";
-                job.StepState[step.Key] = "error";
+                job.JobState.State = "error";
+                job.JobState.StepState[step.Key] = "error";
                 await _deployerContext.SaveChangesAsync();
             }
         }
+
+        // reset to "ready" to process more steps
+        job.JobState.State = "ready";
+        
+        _deployerContext.Entry(job).State = EntityState.Modified;
+        await _deployerContext.SaveChangesAsync();
     }
     
     /// <summary>
@@ -131,6 +145,8 @@ public class QueryLogic
     /// <param name="stepKey"></param>
     private async Task ProcessStep(JobDTO job, string stepKey)
     {
+        _deployerContext.Entry(job).State = EntityState.Modified;
+        Console.WriteLine($"Running step {stepKey} from job ${job.ID}");
         var workDirectory = Worker.GetCacheDir($"temp{Guid.NewGuid()}");
         var artifactLocation = Worker.GetCacheDir($"{job.ID}.zip");
         ZipFile.ExtractToDirectory(artifactLocation, workDirectory);
@@ -142,7 +158,8 @@ public class QueryLogic
         ZipFile.CreateFromDirectory(workDirectory, artifactLocation);
         Directory.Delete(workDirectory, true);
         
-        job.StepState[stepKey] = "done";
+        job.JobState.StepState[stepKey] = "done";
+        // TODO: mark dependant steps done here
         await _deployerContext.SaveChangesAsync();
     }
 }

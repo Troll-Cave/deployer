@@ -95,15 +95,10 @@ namespace data.Migrations
                         .HasColumnType("jsonb")
                         .HasColumnName("code");
 
-                    b.Property<string>("JobState")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("job_state");
-
-                    b.Property<Dictionary<string, string>>("MetaData")
+                    b.Property<JobState>("JobState")
                         .IsRequired()
                         .HasColumnType("jsonb")
-                        .HasColumnName("metadata");
+                        .HasColumnName("job_state");
 
                     b.Property<Guid?>("PipelineVersionId")
                         .HasColumnType("uuid")
@@ -113,11 +108,6 @@ namespace data.Migrations
                         .IsRequired()
                         .HasColumnType("text")
                         .HasColumnName("source_reference");
-
-                    b.Property<Dictionary<string, string>>("StepState")
-                        .IsRequired()
-                        .HasColumnType("jsonb")
-                        .HasColumnName("step_state");
 
                     b.HasKey("ID");
 

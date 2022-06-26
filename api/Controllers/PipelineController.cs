@@ -18,6 +18,7 @@ public class PipelineController : ControllerBase
     [HttpPost("version")]
     public async Task<IActionResult> UpsertVersion([FromBody] PipelineVersion version)
     {
+        Console.WriteLine("what in the phucl");
         await _pipelineLogic.UpsertVersion(version);
         return Ok();
     }

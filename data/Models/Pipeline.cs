@@ -72,16 +72,16 @@ public class PipelineStep
 public class PipelineStepAction
 {
     [JsonPropertyName("name")]
-    public string Name { get; set; }
+    public string Name { get; set; } = "";
     
     [JsonPropertyName("command")]
     public string Command { get; set; }
-    
+
     /// <summary>
     /// Used by certain commands, not all
     /// </summary>
     [JsonPropertyName("stage")]
-    public string Stage { get; set; }
+    public string Stage { get; set; } = "N/A";
 }
 
 public class PipelineStepLocal
@@ -90,7 +90,7 @@ public class PipelineStepLocal
     public string Name { get; set; }
     
     [JsonPropertyName("type")]
-    public string Type { get; set; }
+    public string Type { get; set; } = "string";
 }
 
 public class PipelineVariable

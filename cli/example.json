@@ -2,5 +2,20 @@
   "variables": [{
     "name": "bob"
   }],
-  "flow": [{}]
+  "steps": [{
+    "name": "run",
+    "locals": [{
+      "name": "bar"
+    }],
+    "type": "command",
+    "actions": [{
+      "command": "echo ${locals.bar}"
+    }]
+  }],
+  "flow": [{
+    "step": "run",
+    "locals": {
+      "bar": "${variables.bob}"
+    }
+  }]
 }

@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using data.Models;
 
 namespace data.DataModels;
@@ -16,27 +18,14 @@ public class JobDTO
     [Column("code", TypeName = "jsonb")]
     public Pipeline Code { get; set; }
 
-    /// <summary>
-    /// KV for steps for data, not for use in POC.
-    /// We'll save commiters for example here.
-    /// </summary>
-    [Column("metadata", TypeName = "jsonb")]
-    public Dictionary<string, string> MetaData { get; set; } = new();
-
-    /// <summary>
-    /// KV mapping for step state
-    /// </summary>
-    [Column("step_state", TypeName = "jsonb")]
-    public Dictionary<string, string> StepState { get; set; } = new();
-    
     [Column("pipeline")]
     public Guid? PipelineVersionId { get; set; }
     
     [Column("application")]
     public Guid ApplicationId { get; set; }
     
-    [Column("job_state")]
-    public string JobState { get; set; }
+    [Column("job_state", TypeName = "jsonb")]
+    public JobState JobState { get; set; }
     
     [Column("source_reference")]
     public string SourceReference { get; set; }

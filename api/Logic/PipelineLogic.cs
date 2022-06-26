@@ -1,6 +1,9 @@
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using api.Models;
 using data;
 using data.DataModels;
+using data.Models;
 
 namespace api.Logic;
 
@@ -34,10 +37,13 @@ public class PipelineLogic
             ID = Guid.NewGuid(),
             ApplicationId = app.ID,
             Code = version.Code,
-            JobState = "pending",
-            MetaData = new Dictionary<string, string>(),
+            JobState = new JobState()
+            {
+                State = "pending",
+                StepState = new (),
+                Metadata = new ()
+            },
             PipelineVersionId = version.ID,
-            StepState = new Dictionary<string, string>(),
             SourceReference = reference
         };
 
@@ -47,6 +53,7 @@ public class PipelineLogic
     
     public async Task UpsertVersion(PipelineVersion version)
     {
+        Console.WriteLine(version.Code.Steps.Count);
         var currentVersion = _context.PipelineVersions.FirstOrDefault(x => 
             x.PipelineId == version.Pipeline &&
             x.Name == version.Name);
