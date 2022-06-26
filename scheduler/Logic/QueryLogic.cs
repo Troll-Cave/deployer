@@ -249,9 +249,20 @@ public class QueryLogic
         ZipFile.CreateFromDirectory(workDirectory, artifactLocation);
         Directory.Delete(workDirectory, true);
         
-        
         job.State.StepState[stepKey] = "done";
         // TODO: mark dependant steps done here
+
+        var dependantSteps = job
+            .Code
+            .Flow
+            .Where(x => x.DependsOn.Contains(stepKey))
+            .Select(x => x.Step);
+
+        foreach (var dependantStep in dependantSteps)
+        {
+            job.State.StepState[dependantStep] = "ready";
+        }
+        
         await _deployerContext.SaveChangesAsync();
     }
 
