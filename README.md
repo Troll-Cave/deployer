@@ -113,7 +113,7 @@ problems.
 ## Database
 
 Running the database locally should be relatively easy. If you have  docker installed
-you can use the `stack.yml` to start it up. Simply run `docker compose -f stack.yml up`
+you can use the `stack.yml` to start it up. Simply run `docker compose -f stack.yml up -d`
 in the overview directory. Migrations are done with `dotnet ef database update`. The
 flyway stuff will stick around as that's how you would actually manage the database in
 a non-dev environment.
@@ -146,3 +146,12 @@ dotnet ef migrations add Init
 dotnet ef database update
 curl http://localhost:5251/Util/fill
 ```
+
+For first start of the database, just run these things
+
+```
+dotnet ef database update
+curl http://localhost:5251/Util/fill
+```
+
+The second command does require the API to be running.
