@@ -1,8 +1,10 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Net.Http.Headers;
+using System.Runtime.CompilerServices;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using shared.Models;
 
@@ -10,10 +12,16 @@ namespace shared.Services;
 
 public class Github
 {
-    private const string GithubRoot = "https://api.github.com";
+    private readonly IConfiguration _configuration;
+
+    public Github(IConfiguration _configuration)
+    {
+        this._configuration = _configuration;
+    }
     
     public async Task<byte[]> GetReference(string source, string reference)
     {
+        var githubRoot = _configuration["githubApiRoot"] ?? "https://api.github.com";
         var token = await GetToken();
 
         var org = "Troll-Cave";
@@ -31,7 +39,7 @@ public class Github
         using var client = new HttpClient();
         using var request = new HttpRequestMessage()
         {
-            RequestUri = new Uri($"{GithubRoot}/repos/{org}/{repo}/zipball"),
+            RequestUri = new Uri($"{githubRoot}/repos/{org}/{repo}/zipball/{reference}"),
             Headers =
             {
                 Authorization = new AuthenticationHeaderValue("token", tokenResponse.Token),
@@ -44,7 +52,7 @@ public class Github
         return await response.Content.ReadAsByteArrayAsync();
     }
 
-    private static async Task<GithubToken?> GetTokenResponse(string? tokenUrl, string token)
+    private async Task<GithubToken?> GetTokenResponse(string? tokenUrl, string token)
     {
         using var client = new HttpClient();
         using var request = new HttpRequestMessage()
@@ -66,12 +74,12 @@ public class Github
         return tokenResponse;
     }
 
-    private static async Task<string?> GetTokenUrl(string token, string org)
+    private async Task<string?> GetTokenUrl(string token, string org)
     {
         using var client = new HttpClient();
         using var request = new HttpRequestMessage()
         {
-            RequestUri = new Uri($"{GithubRoot}/app/installations"),
+            RequestUri = new Uri($"{_configuration["githubApiRoot"]}/app/installations"),
             Headers =
             {
                 Accept = {new MediaTypeWithQualityHeaderValue("application/vnd.github.v3+json")},

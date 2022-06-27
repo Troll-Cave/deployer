@@ -12,7 +12,7 @@ steps:
     type: command
     actions:
       - command: |-
-          echo ${locals.bar}
+          echo ${locals.bar} > temp.txt
           cat Dockerfile
   - name: run2
     locals:
@@ -21,7 +21,7 @@ steps:
     actions:
       - command: |-
           echo ${locals.bar}
-          cat Dockerfile
+          cat temp.txt
           
 flow:
   - step: run
