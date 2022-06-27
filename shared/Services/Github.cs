@@ -31,7 +31,7 @@ public class Github
         var partsCount = parts.Length;
         org = parts[partsCount - 2];
         repo = parts[partsCount - 1];
-
+        
         var tokenUrl = await GetTokenUrl(token, org);
 
         var tokenResponse = await GetTokenResponse(tokenUrl, token);
@@ -126,7 +126,7 @@ public class Github
         var unixTimeSeconds = new DateTimeOffset(now).ToUnixTimeSeconds();
 
         var jwt = new JwtSecurityToken(
-            issuer: "207885",
+            issuer: _configuration["githubAppId"],
             claims: new Claim[] {
                 new Claim(JwtRegisteredClaimNames.Iat, (unixTimeSeconds - 60).ToString(), ClaimValueTypes.Integer64),
             },
