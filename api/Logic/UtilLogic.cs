@@ -50,7 +50,7 @@ public class UtilLogic
                 Name = "1",
                 PipelineId = pipelineId,
                 YAML = "",
-                Code = new Pipeline(),
+                Code = new PipelineCode(),
                 Files = new PipelineVersionFiles()
                 {
                     Files = new Dictionary<string, string>()

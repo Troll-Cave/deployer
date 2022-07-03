@@ -61,7 +61,7 @@ namespace data.Migrations
                     id = table.Column<Guid>(type: "uuid", nullable: false),
                     name = table.Column<string>(type: "text", nullable: false),
                     pipeline = table.Column<Guid>(type: "uuid", nullable: false),
-                    code = table.Column<Pipeline>(type: "jsonb", nullable: false),
+                    code = table.Column<PipelineCode>(type: "jsonb", nullable: false),
                     yaml = table.Column<string>(type: "text", nullable: false),
                     files = table.Column<PipelineVersionFiles>(type: "jsonb", nullable: false)
                 },
@@ -109,7 +109,7 @@ namespace data.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false),
-                    code = table.Column<Pipeline>(type: "jsonb", nullable: false),
+                    code = table.Column<PipelineCode>(type: "jsonb", nullable: false),
                     pipeline = table.Column<Guid>(type: "uuid", nullable: true),
                     application = table.Column<Guid>(type: "uuid", nullable: false),
                     job_state = table.Column<JobState>(type: "jsonb", nullable: false),

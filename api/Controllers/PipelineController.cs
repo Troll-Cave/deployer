@@ -21,4 +21,7 @@ public class PipelineController : ControllerBase
         await _pipelineLogic.UpsertVersion(version);
         return Ok();
     }
+    
+    // GET ALL
+    // GET ONE (with versions)
 }

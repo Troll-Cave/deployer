@@ -90,7 +90,7 @@ namespace data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("application");
 
-                    b.Property<Pipeline>("Code")
+                    b.Property<PipelineCode>("Code")
                         .IsRequired()
                         .HasColumnType("jsonb")
                         .HasColumnName("code");
@@ -165,7 +165,7 @@ namespace data.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("id");
 
-                    b.Property<Pipeline>("Code")
+                    b.Property<PipelineCode>("Code")
                         .IsRequired()
                         .HasColumnType("jsonb")
                         .HasColumnName("code");

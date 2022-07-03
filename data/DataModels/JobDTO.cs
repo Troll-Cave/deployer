@@ -16,7 +16,7 @@ public class JobDTO
     /// An exact copy of the pipeline code
     /// </summary>
     [Column("code", TypeName = "jsonb")]
-    public Pipeline Code { get; set; }
+    public PipelineCode Code { get; set; }
 
     [Column("pipeline")]
     public Guid? PipelineVersionId { get; set; }

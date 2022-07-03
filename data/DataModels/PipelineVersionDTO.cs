@@ -18,7 +18,7 @@ public class PipelineVersionDTO
     public Guid PipelineId { get; set; }
     
     [Column("code", TypeName = "jsonb")]
-    public Pipeline Code { get; set; }
+    public PipelineCode Code { get; set; }
     
     [Column("yaml")]
     public string YAML { get; set; }
