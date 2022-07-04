@@ -1,14 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { BaseComponent } from './base-component';
 import { ApplicationSearchComponent } from './application-search/application-search.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { RoutingService } from './routing.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'ui';
 
   actions: Record<string, string[]> = {
@@ -29,7 +31,9 @@ export class AppComponent {
   selectedAction: string | null = null;
   selectedResource: string | null = null;
 
-  constructor(private router: Router) {
+  routerSub?: Subscription = undefined;
+
+  constructor(private router: Router, private routerService: RoutingService) {
 
     // reverse actions to get resources
     for (const action of Object.keys(this.actions))
@@ -45,21 +49,22 @@ export class AppComponent {
     }
 
     this.currentResources = Object.keys(this.resources);
+  }
 
-    // this needs to be done here since the activated route will be empty
-    const routeParts = window.location.pathname
-      .split('/').filter(x => x !== '');
+  ngOnDestroy(): void {
+    if (this.routerSub !== undefined) {
+      this.routerSub.unsubscribe();
+    }
+  }
 
-    if (routeParts.length > 0 && routeParts[0] !== 'home')
-    {
-      this.selectedAction = routeParts[0].replace('_', ' ');
-
-      if (routeParts.length > 1) {
-        this.selectedResource = routeParts[1].replace('_', ' ');
-      }
+  ngOnInit(): void {
+    this.routerSub = this.routerService.routeState.subscribe(x => {
+      this.selectedAction = x.action === '' ? null : x.action;
+      this.selectedResource = x.resource === '' ? null : x.resource;
+      this.query = '';
 
       this.updateOptions();
-    }
+    })
   }
 
   isPillDisabled(text: string): boolean {
@@ -96,43 +101,26 @@ export class AppComponent {
   }
 
   selectAction(action: string) {
-    this.selectedAction = action;
-    this.updateOptions();
-    this.query = '';
-    return;
+    this.routerService.setAction(action);
   }
 
   unSelectAction() {
-    this.selectedAction = null;
-    this.updateOptions();
-    this.query = '';
-    return;
+    this.routerService.setAction();
   }
 
   selectResource(resource: string) {
-    this.selectedResource = resource;
-    this.updateOptions();
-    this.query = '';
-    return;
+    this.routerService.setResource(resource);
   }
 
   unSelectResource() {
-    this.selectedResource = null;
-    this.updateOptions();
-    this.query = '';
-    return;
+    this.routerService.setResource();
   }
 
   updateOptions() {
-    // console.log(this.router.getCurrentNavigation()?.finalUrl?.fragment);
-
     if (this.selectedAction !== null && this.selectedResource !== null) {
       // clear them out
       this.currentActions = [];
       this.currentResources = [];
-
-      this.router.navigateByUrl(this.getUrl())
-        .then();
 
       return;
     }
@@ -141,9 +129,6 @@ export class AppComponent {
       this.currentActions = [];
       this.currentResources = this.actions[this.selectedAction];
 
-      this.router.navigateByUrl('/home')
-        .then();
-
       return;
     }
 
@@ -151,22 +136,12 @@ export class AppComponent {
       this.currentResources = [];
       this.currentActions = this.resources[this.selectedResource];
 
-      this.router.navigateByUrl('/home')
-        .then();
-
       return;
     }
 
     // If nothing is selected, reset everything;
     this.currentActions = Object.keys(this.actions);
     this.currentResources = Object.keys(this.resources);
-
-    this.router.navigateByUrl('/home')
-      .then();
-  }
-
-  getUrl(): string {
-    return `/${this.getUrlPart(this.selectedAction as string)}/${this.getUrlPart(this.selectedResource as string)}`;
   }
 
   getUrlPart(text: string): string {

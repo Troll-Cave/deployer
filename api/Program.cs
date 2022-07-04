@@ -16,7 +16,14 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<DeployerContext>();
 
+builder.Services.AddCors(p => p.AddPolicy("main", builder =>
+{
+    builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+}));
+
 var app = builder.Build();
+
+app.UseCors("main");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

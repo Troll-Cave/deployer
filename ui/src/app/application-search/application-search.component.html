@@ -1,1 +1,17 @@
-<p>application-search works!</p>
+<h3>Application Search</h3>
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Source</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let app of applications">
+      <td>{{app.name}}</td>
+      <td>{{app.source}}</td>
+      <td><button (click)="manageApp(app.id)" class="btn btn-tiny btn-primary">Manage</button></td>
+    </tr>
+  </tbody>
+</table>
