@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { BaseComponent } from './base-component';
 import { ApplicationSearchComponent } from './application-search/application-search.component';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -29,9 +29,8 @@ export class AppComponent {
   selectedAction: string | null = null;
   selectedResource: string | null = null;
 
-  currentComponent: BaseComponent = new ApplicationSearchComponent();
-
   constructor(private router: Router) {
+
     // reverse actions to get resources
     for (const action of Object.keys(this.actions))
     {
@@ -46,6 +45,21 @@ export class AppComponent {
     }
 
     this.currentResources = Object.keys(this.resources);
+
+    // this needs to be done here since the activated route will be empty
+    const routeParts = window.location.pathname
+      .split('/').filter(x => x !== '');
+
+    if (routeParts.length > 0 && routeParts[0] !== 'home')
+    {
+      this.selectedAction = routeParts[0].replace('_', ' ');
+
+      if (routeParts.length > 1) {
+        this.selectedResource = routeParts[1].replace('_', ' ');
+      }
+
+      this.updateOptions();
+    }
   }
 
   isPillDisabled(text: string): boolean {
@@ -156,6 +170,6 @@ export class AppComponent {
   }
 
   getUrlPart(text: string): string {
-    return text.toLowerCase().replace(' ', '_');
+    return text.replace(' ', '_');
   }
 }

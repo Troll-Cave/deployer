@@ -5,7 +5,7 @@ import { ApplicationSearchComponent } from './application-search/application-sea
 
 const routes: Routes = [
   { path: 'home', component: HomeComponent },
-  { path: 'search/application', component: ApplicationSearchComponent },
+  { path: 'Search/Application', component: ApplicationSearchComponent },
   { path: '**', redirectTo: '/home' }
 ];
 
